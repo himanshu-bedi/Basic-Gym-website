@@ -1,0 +1,46 @@
+
+const express=require('express');
+
+const app=express();
+const path=require("path");
+const port=80;
+const bodyParser = require('body-parser');
+const fs=require("fs");
+
+//EXPRESS RELATED
+app.use('/mine',express.static('mine'));
+app.use(express.urlencoded());
+
+//PUG RELATED
+
+//set the template engine 
+
+app.set('view engine', 'pug');
+
+//set the views directory
+
+app.set('views',path.join(__dirname,'views'));
+
+
+app.get("/",(req,res)=>{
+    const params={'title':'Gym website','content':'Okk!! I got it'};
+    res.status(200).render("index.pug",params);
+})
+
+app.post("/",(req,res)=>
+{
+    console.log(req.body);
+    let use=req.body;
+    let str=`Name of customer is ${use.name} and his/her age is ${use.age}. His/her address is ${use.address}`;
+    fs.appendFileSync("working.txt",str+"\n");
+
+    const params={'message':"Your form has been submitted successfully"};
+    res.status(200).render("index.pug",params);
+})
+
+
+
+app.listen(port,()=>{
+    console.log("Hii , did you like my song ?");
+    console.log(`working on port ${port}`);
+})
